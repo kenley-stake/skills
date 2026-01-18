@@ -16,3 +16,7 @@
 - Check /skills to see the list of available skills
 
 - Use skills with `/skill-name` or by asking Claude naturally
+
+## Skills
+
+- **write-tickets**: Write JIRA tickets for a project
