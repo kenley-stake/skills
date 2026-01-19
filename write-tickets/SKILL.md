@@ -620,6 +620,47 @@ User: "Update ORDERS-124 to add a new acceptance criterion"
 
 ---
 
+## Jira Ticket References
+
+When mentioning Jira tickets in descriptions, **always format them as markdown hyperlinks** for easy navigation.
+
+### Format
+
+```markdown
+[TICKET-123](https://YOUR-SITE.atlassian.net/browse/TICKET-123)
+```
+
+### Examples
+
+**In Related Tickets section:**
+```markdown
+## Related Tickets
+
+- Blocks: [UI-456](https://yoursite.atlassian.net/browse/UI-456) - Add region dropdown (UI)
+- Blocked by: [API-123](https://yoursite.atlassian.net/browse/API-123) - Add aws_region field (API)
+```
+
+**In Non-Goals section:**
+```markdown
+## Non-Goals
+
+- Feature X - covered in [ORDERS-123](https://yoursite.atlassian.net/browse/ORDERS-123)
+- Edge case Y - deferred to [ORDERS-456](https://yoursite.atlassian.net/browse/ORDERS-456)
+```
+
+**In description text:**
+```markdown
+This ticket implements the API changes required by [DESIGN-789](https://yoursite.atlassian.net/browse/DESIGN-789).
+```
+
+### Site URL
+
+Determine the Jira site URL from:
+1. The `cloudId` being used for MCP calls
+2. Ask the user if unknown: "What is your Jira site URL? (e.g., yourcompany.atlassian.net)"
+
+---
+
 ## Checklist
 
 Before finalizing a ticket:
@@ -637,4 +678,5 @@ Before finalizing a ticket:
 11. For Chores: "why now" + risk + validation
 12. Multi-component? Split into linked tickets with blocks/blocked by
 13. Component suffix added if multi-component: (API), (UI), (SDK), etc.
-14. After creation: prompt for epic assignment (search existing or create new)
+14. Jira ticket references formatted as markdown hyperlinks: `[TICKET-123](https://site.atlassian.net/browse/TICKET-123)`
+15. After creation: prompt for epic assignment (search existing or create new)
