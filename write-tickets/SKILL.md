@@ -25,6 +25,19 @@ Ask clarifying questions when requirements are unclear. Do not assume or invent 
 - "Is the banking service ready or should we mock it?"
 - "What's explicitly out of scope to prevent creep?"
 
+If the user declines to provide missing details (e.g., error codes, schemas), do not invent them. Instead, place TBD: [Missing Detail] placeholders in the ticket and list them under a new ## Open Questions section at the bottom.
+
+## Analysis & Constraints
+
+Before generating text or calling tools:
+
+1. **Gap Analysis**: Do you have the *Project Key* (e.g., PROJ), *Component Owner*, and *Critical Dependencies*?
+   * *If missing critical info*: Ask the user.
+   * *If user says "skip details"*: Use `TBD` placeholders. **Never hallucinate schema or error codes.**
+2. **Context Check**:
+   * If this is a UI ticket, explicitly ask for the *Figma/Design link*.
+   * If this is an API ticket, explicitly ask for the *Swagger/Proto link*.
+
 ## Title Convention
 
 Format: `[service-identifier] [TYPE] Task Description`
@@ -64,7 +77,9 @@ Lighter template focused on reproduction and fix verification.
 ```markdown
 ## Overview
 
-{What is broken}
+**User Story:** As a [actor], I want [feature], so that [benefit].
+OR
+{what is broken}
 
 ## Reproduction Steps
 
@@ -546,6 +561,19 @@ mcp__atlassian__editJiraIssue
 
 Note: Epic linking uses the `parent` field in next-gen projects, or `customfield_10014` (Epic Link) in classic projects. Check your Jira configuration.
 
+### MCP Execution Rules
+
+1. **Parent Link**: If the user mentions an Epic, search for it first. Do not try to link to a non-existent Parent ID.
+2. **Failure Protocol**: If `createJiraIssue` fails, output the exact JSON error message to the user and ask for correction. Do not retry blindly.
+
+### Error Handling
+
+If an MCP tool call fails (e.g., 'Project not found' or 'Invalid JQL'):
+
+1. Report the specific error to the user.
+2. Do not retry silently with a made-up project key.
+3. Ask the user for the correct parameter (e.g., 'I couldn't find project "ORD". Did you mean "ORDERS"?').
+
 **Create new epic (if needed):**
 
 ```
@@ -569,6 +597,26 @@ Always end with:
 2. Wait for user input
 3. Fuzzy search epics
 4. Confirm and assign
+
+---
+
+## Updating Existing Tickets
+
+If the user asks to update an existing ticket:
+
+1. **Fetch the ticket first** using `mcp__atlassian__getJiraIssue`.
+2. **Present a summary of changes** (e.g., 'Changing Acceptance Criteria 3...').
+3. **Use `mcp__atlassian__editJiraIssue`** to apply only the specific field changes.
+
+### Example Workflow
+
+```
+User: "Update ORDERS-124 to add a new acceptance criterion"
+→ Fetch ORDERS-124 via getJiraIssue
+→ Display current acceptance criteria
+→ "I'll add '- [ ] Retry logic implemented for transient failures' as AC #4. Proceed?"
+→ On confirmation, call editJiraIssue with updated description
+```
 
 ---
 
